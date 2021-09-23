@@ -3,14 +3,9 @@ import styled from 'styled-components'
 import Countdown from 'react-countdown'
 import { Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
-
 import * as anchor from '@project-serum/anchor'
-
 import { LAMPORTS_PER_SOL } from '@solana/web3.js'
-
-import { useAnchorWallet } from '@solana/wallet-adapter-react'
-import { WalletDialogButton } from '@solana/wallet-adapter-material-ui'
-
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import {
   CandyMachine,
   awaitTransactionSignatureConfirmation,
@@ -18,8 +13,7 @@ import {
   mintOneToken,
   shortenAddress,
 } from './candy-machine'
-
-const ConnectButton = styled(WalletDialogButton)``
+import { useWalletDialog } from '@solana/wallet-adapter-material-ui'
 
 const CounterText = styled.span`` // add your styles here
 
@@ -38,6 +32,7 @@ const Home = (props: HomeProps) => {
   const [isSoldOut, setIsSoldOut] = useState(false) // true when items remaining is zero
   const [isMinting, setIsMinting] = useState(false) // true when user got to press MINT
   const [itemsRemaining, setItemsRemaining] = useState<number>(0)
+  const { setOpen } = useWalletDialog()
 
   const [alertState, setAlertState] = useState<AlertState>({
     open: false,
@@ -166,34 +161,28 @@ const Home = (props: HomeProps) => {
             128 randomly-generated NFTs
           </p>
 
-          <p className="text-white mt-6">
-            <span className="border-b-2 border-gray-200">
-              Only {itemsRemaining} left!
-            </span>
-          </p>
+          {!isSoldOut && isActive && (
+            <p className="text-white mt-6">
+              <span className="border-b-2 border-gray-200">
+                Only {itemsRemaining} left!
+              </span>
+            </p>
+          )}
         </div>
 
         <div className="bg-black rounded-xl shadow-lg w-full overflow-hidden">
-          <video autoPlay muted loop src="./assets/teaser.mp4" />
+          <video
+            autoPlay
+            muted
+            loop
+            src="https://hemps.s3.us-east-1.amazonaws.com/teaser.mp4"
+          />
 
-          <div className="flex justify-center py-8">
-            {/*<Connected v-if="connected"/>*/}
-            {/*<NotConnected v-else/>*/}
-          </div>
-        </div>
-
-        {wallet && (
-          <p>Address: {shortenAddress(wallet.publicKey.toBase58() || '')}</p>
-        )}
-
-        {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>}
-
-        <div>
-          {!wallet ? (
-            <ConnectButton>Connect Wallet</ConnectButton>
-          ) : (
-            <button
-              className="
+          <div className="text-center py-8">
+            {!wallet ? (
+              <button
+                onClick={() => setOpen(true)}
+                className="
                 inline-flex
                 items-center
                 justify-center
@@ -204,27 +193,57 @@ const Home = (props: HomeProps) => {
                 text-white
                 tracking-wide
                 uppercase"
-              disabled={isSoldOut || isMinting || !isActive}
-              onClick={onMint}
-            >
-              {isSoldOut ? (
-                'SOLD OUT'
-              ) : isActive ? (
-                isMinting ? (
-                  'Minting...'
+                // disabled={isSoldOut || isMinting || !isActive}
+              >
+                Connect Wallet
+              </button>
+            ) : (
+              <button
+                className="
+                inline-flex
+                items-center
+                justify-center
+                font-bold
+                px-8
+                h-12
+                border-2 border-white
+                text-white
+                tracking-wide
+                uppercase"
+                disabled={isSoldOut || isMinting || !isActive}
+                onClick={onMint}
+              >
+                {isSoldOut ? (
+                  'SOLD OUT'
+                ) : isActive ? (
+                  isMinting ? (
+                    'Minting...'
+                  ) : (
+                    'MINT'
+                  )
                 ) : (
-                  'MINT'
-                )
-              ) : (
-                <Countdown
-                  date={startDate}
-                  onMount={({ completed }) => completed && setIsActive(true)}
-                  onComplete={() => setIsActive(true)}
-                  renderer={renderCounter}
-                />
-              )}
-            </button>
-          )}
+                  <Countdown
+                    date={startDate}
+                    onMount={({ completed }) => completed && setIsActive(true)}
+                    onComplete={() => setIsActive(true)}
+                    renderer={renderCounter}
+                  />
+                )}
+              </button>
+            )}
+
+            {wallet && (
+              <>
+                <p className="text-white mt-6">
+                  Address: {shortenAddress(wallet.publicKey.toBase58() || '')}
+                </p>
+
+                <p className="text-white mt-3">
+                  Balance: {(balance || 0).toLocaleString()} SOL
+                </p>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

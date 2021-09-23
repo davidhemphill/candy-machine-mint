@@ -10,23 +10,4 @@ module.exports = {
   requirePragma: false,
   proseWrap: 'preserve',
   arrowParens: 'avoid',
-
-  overrides: [
-    {
-      files: 'resources/css/**/*.css',
-      options: {
-        tabWidth: 2,
-      },
-    },
-    {
-      files: [
-        'resources/js/fields.js',
-        'resources/js/components.js',
-        'resources/js/router/routes.js',
-      ],
-      options: {
-        printWidth: 300,
-      },
-    },
-  ],
 }
