@@ -5,7 +5,7 @@ import { Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 import * as anchor from '@project-serum/anchor'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
+import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import {
   CandyMachine,
   awaitTransactionSignatureConfirmation,
@@ -157,7 +157,7 @@ const Home = (props: HomeProps) => {
       >
         <div className="text-center">
           <h1 className="text-5xl text-white font-bold">SOL HEMPS</h1>
-          <p className="mt-2 text-xl text-white uppercase">
+          <p className="mt-2 text-lg font-bold text-white uppercase">
             128 randomly-generated NFTs
           </p>
 
@@ -167,6 +167,10 @@ const Home = (props: HomeProps) => {
                 Only {itemsRemaining} left!
               </span>
             </p>
+          )}
+
+          {!isActive && !isSoldOut && (
+            <p className="text-white mt-6">{startDate.toDateString()}</p>
           )}
         </div>
 
@@ -193,7 +197,7 @@ const Home = (props: HomeProps) => {
                 text-white
                 tracking-wide
                 uppercase"
-                // disabled={isSoldOut || isMinting || !isActive}
+                disabled={isSoldOut || isMinting || !isActive}
               >
                 Connect Wallet
               </button>
