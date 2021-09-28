@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import Countdown from 'react-countdown'
 import { Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
@@ -14,8 +13,6 @@ import {
   shortenAddress,
 } from './candy-machine'
 import { useWalletDialog } from '@solana/wallet-adapter-material-ui'
-
-const CounterText = styled.span`` // add your styles here
 
 export interface HomeProps {
   candyMachineId: anchor.web3.PublicKey
@@ -169,8 +166,17 @@ const Home = (props: HomeProps) => {
             </p>
           )}
 
-          {!isActive && !isSoldOut && (
-            <p className="text-white mt-6">{startDate.toDateString()}</p>
+          {!isActive && (
+            <p className={'text-white mt-6'}>
+              <Countdown
+                date={startDate}
+                onMount={({ completed }) => {
+                  completed && setIsActive(true)
+                }}
+                onComplete={() => setIsActive(true)}
+                renderer={renderCounter}
+              />
+            </p>
           )}
         </div>
 
@@ -182,7 +188,7 @@ const Home = (props: HomeProps) => {
             src="https://hemps.s3.us-east-1.amazonaws.com/teaser.mp4"
           />
 
-          <div className="text-center py-8">
+          <div className="text-center py-8 px-4">
             {!wallet ? (
               <button
                 onClick={() => setOpen(true)}
@@ -197,7 +203,7 @@ const Home = (props: HomeProps) => {
                 text-white
                 tracking-wide
                 uppercase"
-                disabled={isSoldOut || isMinting || !isActive}
+                disabled={isSoldOut || isMinting}
               >
                 Connect Wallet
               </button>
@@ -218,20 +224,15 @@ const Home = (props: HomeProps) => {
                 onClick={onMint}
               >
                 {isSoldOut ? (
-                  'SOLD OUT'
+                  'Sold Out!'
                 ) : isActive ? (
                   isMinting ? (
                     'Minting...'
                   ) : (
-                    'MINT'
+                    <span>Mint for 0.5 SOL</span>
                   )
                 ) : (
-                  <Countdown
-                    date={startDate}
-                    onMount={({ completed }) => completed && setIsActive(true)}
-                    onComplete={() => setIsActive(true)}
-                    renderer={renderCounter}
-                  />
+                  <span>Connected</span>
                 )}
               </button>
             )}
@@ -275,9 +276,9 @@ interface AlertState {
 
 const renderCounter = ({ days, hours, minutes, seconds, completed }: any) => {
   return (
-    <CounterText>
-      {hours} hours, {minutes} minutes, {seconds} seconds
-    </CounterText>
+    <span>
+      {days} days, {hours} hours, {minutes} mins, {seconds} secs
+    </span>
   )
 }
 
