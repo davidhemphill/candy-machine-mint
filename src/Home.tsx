@@ -152,7 +152,7 @@ const Home = (props: HomeProps) => {
         <div className="text-center space-y-2">
           <h1 className="text-5xl text-white font-bold">SOL HEMPS</h1>
           <p className="text-lg font-bold text-white uppercase">
-            128 randomly-generated NFTs
+            129 randomly-generated NFTs
           </p>
 
           {wallet && !isSoldOut && isActive && (
