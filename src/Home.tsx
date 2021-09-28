@@ -14,6 +14,8 @@ import {
 } from './candy-machine'
 import { useWalletDialog } from '@solana/wallet-adapter-material-ui'
 
+import Loading from './Loading'
+
 export interface HomeProps {
   candyMachineId: anchor.web3.PublicKey
   config: anchor.web3.PublicKey
@@ -163,7 +165,7 @@ const Home = (props: HomeProps) => {
             </p>
           )}
 
-          {wallet && isSoldOut && (
+          {wallet && isSoldOut && isActive && (
             <p className="text-white">
               <span className="border-b-2 border-gray-200">SOLD OUT!</span>
             </p>
@@ -173,7 +175,7 @@ const Home = (props: HomeProps) => {
             <p className={'text-white'}>Now live!</p>
           )}
 
-          {!wallet && !isActive && (
+          {!isActive && (
             <p className={'text-white'}>
               <Countdown
                 date={startDate}
@@ -234,7 +236,7 @@ const Home = (props: HomeProps) => {
                   'Sold Out!'
                 ) : isActive ? (
                   isMinting ? (
-                    'Minting...'
+                    <Loading />
                   ) : (
                     <span>Mint for 0.5 SOL</span>
                   )
