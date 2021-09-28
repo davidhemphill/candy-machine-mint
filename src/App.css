@@ -1,3 +1,18 @@
-.App {
-  text-align: center;
+@tailwind base;
+
+html {
+  height: 100%;
 }
+
+body {
+  min-height: 100%;
+}
+
+.background {
+  background-image: url(./assets/bg.jpg);
+  background-position: center;
+  background-size: 1200px;
+}
+
+@tailwind components;
+@tailwind utilities;

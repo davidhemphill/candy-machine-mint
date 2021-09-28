@@ -137,11 +137,8 @@ const Home = (props: HomeProps) => {
 
   return (
     <div className="background min-h-screen">
-      <div className="absolute inset-0 bg-gray-800 opacity-[0.9] z-10" />
-
       <div
         className="
-          relative
           min-h-screen
           flex flex-col
           items-center
@@ -152,22 +149,32 @@ const Home = (props: HomeProps) => {
           space-y-6
           "
       >
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <h1 className="text-5xl text-white font-bold">SOL HEMPS</h1>
-          <p className="mt-2 text-lg font-bold text-white uppercase">
+          <p className="text-lg font-bold text-white uppercase">
             128 randomly-generated NFTs
           </p>
 
-          {!isSoldOut && isActive && (
-            <p className="text-white mt-6">
+          {wallet && !isSoldOut && isActive && (
+            <p className="text-white">
               <span className="border-b-2 border-gray-200">
                 Only {itemsRemaining} left!
               </span>
             </p>
           )}
 
-          {!isActive && (
-            <p className={'text-white mt-6'}>
+          {wallet && isSoldOut && (
+            <p className="text-white">
+              <span className="border-b-2 border-gray-200">SOLD OUT!</span>
+            </p>
+          )}
+
+          {!wallet && !isSoldOut && isActive && (
+            <p className={'text-white'}>Now live!</p>
+          )}
+
+          {!wallet && !isActive && (
+            <p className={'text-white'}>
               <Countdown
                 date={startDate}
                 onMount={({ completed }) => {
