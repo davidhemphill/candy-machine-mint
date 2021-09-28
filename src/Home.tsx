@@ -137,7 +137,7 @@ const Home = (props: HomeProps) => {
 
   return (
     <div className="background min-h-screen">
-      <div className="absolute inset-0 bg-gray-800 opacity-[90%] z-10" />
+      <div className="absolute inset-0 bg-gray-800 opacity-[0.9] z-10" />
 
       <div
         className="
